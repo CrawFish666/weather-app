@@ -1,1 +1,46 @@
 @import "tailwindcss";
+
+body {
+	/* background-color: gray; */
+	margin: 0;
+	background:
+		linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+		url("./assets/bg-mobile.webp") center / cover no-repeat fixed;
+}
+
+@media (min-width: 1025px) {
+	body {
+		background:
+			linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+			url("./assets/bg-desktop.webp") center / cover no-repeat fixed;
+	}
+}
+
+html,
+body {
+	overflow-x: hidden;
+}
+
+#root {
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+}
+
+main {
+	flex-grow: 1;
+}
+
+@keyframes splash {
+	0% {
+		transform: scale(0.95) translateY(0);
+	}
+
+	50% {
+		transform: scale(1.05) translateY(-10px);
+	}
+
+	100% {
+		transform: scale(0.95) translateY(0);
+	}
+}
