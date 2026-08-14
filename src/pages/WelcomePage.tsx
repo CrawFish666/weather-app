@@ -1,10 +1,13 @@
 import { LocationAction } from "../components/LocationAction";
 import sunLogo from "../assets/sunLogo.webp"
+import { useWeather } from "../hooks/useWeather";
 
 export function WelcomePage() {
 
+	const { useMyLocation } = useWeather();
+
 	const handleUseLocation = () => {
-		// Юзаем функцию запроса геолокации
+		useMyLocation()
 	}
 
 	return (
