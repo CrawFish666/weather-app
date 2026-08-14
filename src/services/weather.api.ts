@@ -10,7 +10,7 @@ import type {
 const WEATHER_API_URL = import.meta.env.VITE_WEATHER_API_URL;
 
 // То что должен получить наша функция/сервис на вход
-interface GetCurrentWeatherParams {
+export interface GetCurrentWeatherParams {
 	latitude: number;
 	longitude: number;
 }
