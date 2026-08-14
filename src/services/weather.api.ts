@@ -3,6 +3,7 @@ import type {
 	DailyWeather,
 	HourlyByDate,
 	HourlyWeather,
+	RecentCityCurrentWeather,
 	WeatherData
 } from "../types/weather";
 
@@ -65,6 +66,18 @@ interface WeatherApiResponse {
 		precipitation_sum: string;
 		sunrise: string;
 		sunset: string;
+	}
+}
+
+// Сырой ответ от Api для наших recent списка городов
+interface RecentCityWeatherApiResponse {
+	current: {
+		temperature_2m: number;
+		weather_code: number;
+	};
+
+	current_units: {
+		temperature_2m: string;
 	}
 }
 
@@ -162,4 +175,36 @@ export async function getWeatherData({
 		daily,
 		timezone: data.timezone
 	}
+}
+
+// Получаем current temp для recent городов
+export async function getCurrentWeatherForRecentCities(cities: GetCurrentWeatherParams[]): Promise<RecentCityCurrentWeather[]> {
+	if (cities.length === 0) return [];
+
+	const url = new URL(WEATHER_API_URL);
+
+	url.search = new URLSearchParams({
+		latitude: cities.map(city => city.latitude).join(","),
+		longitude: cities.map(city => city.longitude).join(","),
+		current: "temperature_2m,weather_code",
+		timezone: "auto"
+	}).toString()
+
+	const response = await fetch(url);
+
+	if (!response.ok) {
+		throw new Error(`Batch weather request failed: ${response.status}`);
+	}
+
+	// принимаем сырые данные
+	const rawData = await response.json();
+
+	// Нормализуем и делаем всегда массив!
+	const data: RecentCityWeatherApiResponse[] = Array.isArray(rawData) ? rawData : [rawData];
+
+	return data.map(item => ({
+		temperature: item.current.temperature_2m,
+		tempUnit: item.current_units.temperature_2m,
+		weatherCode: item.current.weather_code
+	}))
 }
