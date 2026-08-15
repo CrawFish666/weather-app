@@ -12,6 +12,9 @@ export function RecentlySearchedCard({ city, data }: RecentlySearchedCardProps) 
 
 	const { selectCity } = useWeather();
 
+	if (!data) {
+		return null;
+	}
 
 	const { iconUrl, label } = getWeatherIcon(data.weatherCode);
 
