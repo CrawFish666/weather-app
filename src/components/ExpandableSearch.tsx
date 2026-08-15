@@ -81,8 +81,6 @@ export function ExpandableSearch() {
 
 	}, [query, searchCities])
 
-	// По хорошему переделать компонент. Надо button засунуть внутрь div absolute, тогда размеры не надо будет подбивать
-
 	return (
 		<div className={`bg-gray-600 cursor-pointer inline-flex flex-row-reverse  ${isLoading || cities ? "rounded-t-2xl" : "rounded-full"} transition-[width] duration-300 ease-out items-center overflow-hidden whitespace-nowrap ${isOpen ? "w-[min(96vw,400px)]" : "w-10"}`}>
 			<button
