@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { WeatherContext, type WeatherContextValue, type WeatherMode } from "./WeatherContext";
 import { getCityByCoordinates } from "../services/geocoding.api";
 import { getWeatherData, type GetCurrentWeatherParams } from "../services/weather.api"
@@ -18,6 +18,8 @@ export function WeatherProvider({ children }: { children: React.ReactNode }) {
 	const [curWeatherData, setCurWeatherData] = useState<WeatherData | null>(null);
 	const [isLoadingCurWeather, setIsLoadingCurWeather] = useState(false);
 
+	const didInitRef = useRef(false);
+
 	const fetchWeather = useCallback(async (coords: GetCurrentWeatherParams, city?: City) => {
 		setIsLoadingCurWeather(true);
 		setError(null);
@@ -30,7 +32,6 @@ export function WeatherProvider({ children }: { children: React.ReactNode }) {
 			}
 
 			const data = await getWeatherData(coords);
-
 			setCurWeatherData(data);
 
 		} catch (error) {
@@ -60,6 +61,8 @@ export function WeatherProvider({ children }: { children: React.ReactNode }) {
 			try {
 				// Получаем данные о городе по координатам
 				const data = await getCityByCoordinates(latitude, longitude);
+
+				addRecentCity(data);
 
 				// Делаем запрос погоды по координатам
 				await fetchWeather({ latitude: data.latitude, longitude: data.longitude }, data);
@@ -100,19 +103,29 @@ export function WeatherProvider({ children }: { children: React.ReactNode }) {
 		await fetchWeather({ latitude: city.latitude, longitude: city.longitude }, city);
 	}, [fetchWeather])
 
-	useEffect(() => {
-		const recentCities = getRecentCities();
+	const initializeApp = useCallback(async () => {
+		if (didInitRef.current) return;
 
-		if (recentCities.length === 0) {
+		didInitRef.current = true;
+		const recent = getRecentCities();
+		// setRecentSearches(recent);
+
+		if (recent.length > 0) {
+			const lastCity = recent[0];
+
+			await fetchWeather({ latitude: lastCity.latitude, longitude: lastCity.longitude }, lastCity);
+
+		} else {
 			setMode("welcome");
-			return;
 		}
+	}, [fetchWeather]);
 
-		const lastCity = recentCities[0];
+	useEffect(() => {
+		const timer = setTimeout(initializeApp, 1500);
 
-		fetchWeather({latitude: lastCity.latitude, longitude: lastCity.longitude}, lastCity);
+		return () => clearTimeout(timer);
 
-	}, [fetchWeather])
+	}, [initializeApp])
 
 	const value: WeatherContextValue = {
 		mode,

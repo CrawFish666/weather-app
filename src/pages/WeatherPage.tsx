@@ -1,10 +1,15 @@
-import { LocationAction } from "../components/LocationAction";
-import sunLogo from "../assets/sunLogo.webp"
 import { ExpandableSearch } from "../components/ExpandableSearch";
+import { LocationAction } from "../components/LocationAction";
 
-export function WelcomePage() {
 
-	
+import { CityHeader } from "../components/Weather/CityHeader";
+import { CurrentTemperature } from "../components/Weather/CurrentTemperature";
+
+import { HourlyForecasts } from "../components/Weather/HourlyForecasts";
+
+
+export function WeatherPage() {
+
 	return (
 		<>
 			<header className="max-w-7xl w-full mx-auto px-2 md:px-12 flex flex-col gap-10 py-4">
@@ -21,16 +26,17 @@ export function WelcomePage() {
 					</div>
 				</div>
 			</header>
+			<main className="">
+				<div className="max-w-7xl m-auto px-2 md:px-12 flex flex-col gap-10 py-6">
 
-			<main className="max-w-96 md:max-w-2xl w-full mx-auto px-2 flex items-center justify-center">
-				<div className="flex flex-col items-center w-full">
-					<div className="max-w-72 self-center">
-						<img src={sunLogo} className="object-contain" fetchPriority="high" alt="sun" />
-					</div>
-					<div className="text-center flex flex-col gap-5 text-white">
-						<h1>Добро пожаловать</h1>
-						<p>Разрешите доступ к геолокации или найдите город вручную</p>
-					</div>
+					<CityHeader />
+
+					<CurrentTemperature />
+
+
+
+					<HourlyForecasts />
+
 				</div>
 			</main>
 		</>
