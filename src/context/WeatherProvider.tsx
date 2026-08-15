@@ -151,7 +151,7 @@ export function WeatherProvider({ children }: { children: React.ReactNode }) {
 			fetchWeather({ latitude: city.latitude, longitude: city.longitude }, city),
 			fetchRecentCitiesWeather(updatedRecentCities)
 		])
-		await fetchWeather({ latitude: city.latitude, longitude: city.longitude }, city);
+
 	}, [fetchWeather, addCityToRecent, fetchRecentCitiesWeather])
 
 	const initializeApp = useCallback(async () => {
