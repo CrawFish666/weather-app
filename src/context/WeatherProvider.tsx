@@ -87,7 +87,7 @@ export function WeatherProvider({ children }: { children: React.ReactNode }) {
 		}
 	}, []);
 
-	const useMyLocation = () => {
+	const useMyLocation = useCallback(() => {
 		if (!navigator.geolocation) {
 			setError("Геолокация не поддерживается браузером");
 			return;
@@ -131,8 +131,7 @@ export function WeatherProvider({ children }: { children: React.ReactNode }) {
 			maximumAge: 10000
 		}
 		)
-
-	}
+	}, [addCityToRecent, fetchWeather, fetchRecentCitiesWeather]);
 
 	const searchCities = useCallback(
 		async (query: string, signal?: AbortSignal): Promise<City[]> => {
@@ -158,20 +157,18 @@ export function WeatherProvider({ children }: { children: React.ReactNode }) {
 		if (didInitRef.current) return;
 
 		didInitRef.current = true;
-		const recent = getRecentCities();
-		// setRecentSearches(recent);
 
-		if (recent.length > 0) {
-			const lastCity = recent[0];
+		if (recentCities.length > 0) {
+			const lastCity = recentCities[0];
 			await Promise.allSettled([
 				fetchWeather({ latitude: lastCity.latitude, longitude: lastCity.longitude }, lastCity),
-				fetchRecentCitiesWeather(recent)
+				fetchRecentCitiesWeather(recentCities)
 			])
 
 		} else {
 			setMode("welcome");
 		}
-	}, [fetchWeather, fetchRecentCitiesWeather]);
+	}, [recentCities, fetchWeather, fetchRecentCitiesWeather]);
 
 	useEffect(() => {
 		const timer = setTimeout(initializeApp, 1500);
