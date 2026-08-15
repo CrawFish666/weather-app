@@ -6,6 +6,7 @@ import { CityHeader } from "../components/Weather/CityHeader";
 import { CurrentTemperature } from "../components/Weather/CurrentTemperature";
 
 import { HourlyForecasts } from "../components/Weather/HourlyForecasts";
+import { RecentlySearched } from "../components/Weather/RecentlySearched";
 
 
 export function WeatherPage() {
@@ -33,7 +34,7 @@ export function WeatherPage() {
 
 					<CurrentTemperature />
 
-
+					<RecentlySearched />
 
 					<HourlyForecasts />
 

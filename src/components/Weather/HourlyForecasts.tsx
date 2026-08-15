@@ -49,7 +49,7 @@ export function HourlyForecasts() {
 
 	return (
 		<section>
-			<h2 className="mb-4 text-lg font-semibold text-gray-400/80">Today's Forecast</h2>
+			<h2 className="mb-4 text-lg font-semibold text-gray-400/80">Hourly Forecast</h2>
 			<div className="embla">
 				<div className="embla__viewport overflow-hidden cursor-grab" ref={emblaRef}>
 					<div className="embla__container flex touch-pan-y touch-pinch-zoom gap-3">
