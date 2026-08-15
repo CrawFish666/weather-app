@@ -1,5 +1,4 @@
 import { MapPin } from "lucide-react";
-import type { City } from "../../types/geocoding";
 import { formatDayMonthWeekday } from "../../utils/date";
 import { CityHeaderSkeleton } from "../Skeletons/weather/CityHeaderSkeleton";
 import { useWeather } from "../../hooks/useWeather";
