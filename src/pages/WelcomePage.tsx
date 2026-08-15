@@ -1,6 +1,7 @@
 import { LocationAction } from "../components/LocationAction";
 import sunLogo from "../assets/sunLogo.webp"
 import { useWeather } from "../hooks/useWeather";
+import { ExpandableSearch } from "../components/ExpandableSearch";
 
 export function WelcomePage() {
 
@@ -22,7 +23,7 @@ export function WelcomePage() {
 						<span className="text-white text-[clamp(1.5rem,8vw,2.25rem)] leading-none font-medium">eather App</span>
 					</div>
 					<div className="absolute right-0 z-1 top-1/2 -translate-y-1/2">
-						{/** Компонент + передачу функции поиска */}
+						<ExpandableSearch />
 					</div>
 				</div>
 			</header>

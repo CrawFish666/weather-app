@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { WeatherContext, type WeatherContextValue, type WeatherMode } from "./WeatherContext";
 import { getCityByCoordinates } from "../services/geocoding.api";
 import { getWeatherData, type GetCurrentWeatherParams } from "../services/weather.api"
+import { searchCities as searchCitiesApi } from "../services/geocoding.api";
 import type { City } from "../types/geocoding";
 import type { WeatherData } from "../types/weather";
+import { addRecentCity, getRecentCities } from "../services/recentCities.service";
 
 
 
@@ -16,7 +18,7 @@ export function WeatherProvider({ children }: { children: React.ReactNode }) {
 	const [curWeatherData, setCurWeatherData] = useState<WeatherData | null>(null);
 	const [isLoadingCurWeather, setIsLoadingCurWeather] = useState(false);
 
-	const fetchWeather = async (coords: GetCurrentWeatherParams, city?: City) => {
+	const fetchWeather = useCallback(async (coords: GetCurrentWeatherParams, city?: City) => {
 		setIsLoadingCurWeather(true);
 		setError(null);
 
@@ -40,7 +42,7 @@ export function WeatherProvider({ children }: { children: React.ReactNode }) {
 		} finally {
 			setIsLoadingCurWeather(false);
 		}
-	}
+	}, [])
 
 	const useMyLocation = () => {
 		if (!navigator.geolocation) {
@@ -83,13 +85,44 @@ export function WeatherProvider({ children }: { children: React.ReactNode }) {
 
 	}
 
+	const searchCities = useCallback(
+		async (query: string, signal?: AbortSignal): Promise<City[]> => {
+			return searchCitiesApi({
+				query,
+				signal
+			});
+		},
+		[]
+	);
+
+	const selectCity = useCallback(async (city: City) => {
+		addRecentCity(city);
+		await fetchWeather({ latitude: city.latitude, longitude: city.longitude }, city);
+	}, [fetchWeather])
+
+	useEffect(() => {
+		const recentCities = getRecentCities();
+
+		if (recentCities.length === 0) {
+			setMode("welcome");
+			return;
+		}
+
+		const lastCity = recentCities[0];
+
+		fetchWeather({latitude: lastCity.latitude, longitude: lastCity.longitude}, lastCity);
+
+	}, [fetchWeather])
+
 	const value: WeatherContextValue = {
 		mode,
 		useMyLocation,
 		error,
 		isLoadingCurWeather,
 		curWeatherData,
-		city
+		city,
+		searchCities,
+		selectCity
 	};
 
 	return (

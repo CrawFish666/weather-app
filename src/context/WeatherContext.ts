@@ -13,6 +13,8 @@ export interface WeatherContextValue {
 	isLoadingCurWeather: boolean;
 	curWeatherData: WeatherData | null;
 	city: City | null;
+	searchCities: (query: string, signal?: AbortSignal) => Promise<City[]>;
+	selectCity: (city: City) => Promise<void>;
 }
 
 export const WeatherContext = createContext<WeatherContextValue | undefined>(undefined);
