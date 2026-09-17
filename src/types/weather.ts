@@ -19,6 +19,16 @@ export interface HourlyWeather {
 }
 
 export interface DailyWeather {
+	date: string;
+	weatherCode: number;
+	temperatureMin: number;
+	temperatureMax: number;
+	precipitationSum: number;
+	tempUnitMax: string;
+	tempUnitMin: string;
+}
+
+export interface RawDailyWeather {
 	date: string[];
 	weatherCode: number[];
 	temperatureMin: number[];
@@ -26,7 +36,9 @@ export interface DailyWeather {
 	precipitationSum: number[];
 	tempUnitMax: string;
 	tempUnitMin: string;
-};
+}
+
+export type DailyWeatherList = DailyWeather[];
 
 // Часовой прогноз, сгруппированный по дате ("YYYY-MM-DD" → HourlyWeather за этот день)
 export type HourlyByDate = Record<string, HourlyWeather>;
@@ -41,6 +53,7 @@ export interface RecentCityCurrentWeather {
 export interface WeatherData {
 	current: CurrentWeather;
 	hourlyByDate: HourlyByDate;
-	daily: DailyWeather;
+	dailyNormalize: DailyWeatherList;
+	// daily: DailyWeather;
 	timezone: string;
 }

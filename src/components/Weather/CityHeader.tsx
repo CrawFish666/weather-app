@@ -8,7 +8,7 @@ import { useWeather } from "../../hooks/useWeather";
 export function CityHeader() {
 
 	const { curWeatherData, isLoadingCurWeather, city } = useWeather();
-	const todayDate = curWeatherData?.daily.date[0];
+	const todayDate = curWeatherData?.dailyNormalize[0].date;
 
 	if (isLoadingCurWeather) {
 		return (

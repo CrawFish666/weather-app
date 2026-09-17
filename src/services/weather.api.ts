@@ -1,8 +1,9 @@
 import type {
 	CurrentWeather,
-	DailyWeather,
+	DailyWeatherList,
 	HourlyByDate,
 	HourlyWeather,
+	RawDailyWeather,
 	RecentCityCurrentWeather,
 	WeatherData
 } from "../types/weather";
@@ -115,6 +116,21 @@ function groupHourlyByDate(hourly: HourlyWeather): HourlyByDate {
 	return grouped;
 }
 
+function normalizeDailyWeather(
+	daily: WeatherApiResponse["daily"],
+	units: WeatherApiResponse["daily_units"]
+): DailyWeatherList {
+	return daily.time.map((date, index) => ({
+		date,
+		weatherCode: daily.weather_code[index],
+		temperatureMin: daily.temperature_2m_min[index],
+		temperatureMax: daily.temperature_2m_max[index],
+		precipitationSum: daily.precipitation_sum[index],
+		tempUnitMax: units.temperature_2m_max,
+		tempUnitMin: units.temperature_2m_min,
+	}));
+}
+
 export async function getWeatherData({
 	latitude,
 	longitude
@@ -161,7 +177,7 @@ export async function getWeatherData({
 
 	const hourlyByDate = groupHourlyByDate(rawHourly);
 
-	const daily: DailyWeather = {
+	const rawDaily: RawDailyWeather = {
 		date: data.daily.time,
 		weatherCode: data.daily.weather_code,
 		temperatureMin: data.daily.temperature_2m_min,
@@ -169,12 +185,17 @@ export async function getWeatherData({
 		precipitationSum: data.daily.precipitation_sum,
 		tempUnitMax: data.daily_units.temperature_2m_max,
 		tempUnitMin: data.daily_units.temperature_2m_min
-	}
+	};
+
+	const dailyNormalize = normalizeDailyWeather(
+		data.daily,
+		data.daily_units
+	);
 
 	return {
 		current,
 		hourlyByDate,
-		daily,
+		dailyNormalize,
 		timezone: data.timezone
 	}
 }
