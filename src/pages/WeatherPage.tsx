@@ -4,8 +4,8 @@ import { LocationAction } from "../components/LocationAction";
 
 import { CityHeader } from "../components/Weather/CityHeader";
 import { CurrentTemperature } from "../components/Weather/CurrentTemperature";
+import { Forecasts } from "../components/Weather/Forecasts";
 
-import { HourlyForecasts } from "../components/Weather/HourlyForecasts";
 import { RecentlySearched } from "../components/Weather/RecentlySearched";
 
 
@@ -36,7 +36,7 @@ export function WeatherPage() {
 
 					<RecentlySearched />
 
-					<HourlyForecasts />
+					<Forecasts />
 
 				</div>
 			</main>
