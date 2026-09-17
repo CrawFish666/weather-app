@@ -10,5 +10,5 @@ export default defineConfig({
 		basicSsl(),
 		tailwindcss()
 	],
-	base: "/weather-app/"
+	// base: "/weather-app/"
 })
