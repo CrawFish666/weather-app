@@ -102,12 +102,14 @@ function groupHourlyByDate(hourly: HourlyWeather): HourlyByDate {
 			};
 		}
 
+		const group = grouped[date];
+
 		// Наполняем ключ(дату) значениями
-		grouped[date].time.push(hourly.time[i]);
-		grouped[date].weatherCode.push(hourly.weatherCode[i]);
-		grouped[date].temperature.push(hourly.temperature[i]);
-		grouped[date].windSpeed.push(hourly.windSpeed[i]);
-		grouped[date].precipitationProbability.push(hourly.precipitationProbability[i]);
+		group.time.push(hourly.time[i]);
+		group.weatherCode.push(hourly.weatherCode[i]);
+		group.temperature.push(hourly.temperature[i]);
+		group.windSpeed.push(hourly.windSpeed[i]);
+		group.precipitationProbability.push(hourly.precipitationProbability[i]);
 	});
 
 	return grouped;

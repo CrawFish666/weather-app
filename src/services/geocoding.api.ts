@@ -22,7 +22,12 @@ interface ReverseGeocodingResponse {
 	lat: string;
 	lon: string;
 	address: {
-		city: string;
+		city?: string;
+		town?: string;
+		village?: string;
+		hamlet?: string;
+		municipality?: string;
+		county?: string;
 		state: string;
 		country: string;
 		country_code: string;
@@ -52,7 +57,14 @@ export async function getCityByCoordinates(latitude: number, longitude: number, 
 		latitude: Number(data.lat),
 		longitude: Number(data.lon),
 		country: data.address.country,
-		name: data.address.city,
+		name:
+			data.address.city ??
+			data.address.town ??
+			data.address.village ??
+			data.address.hamlet ??
+			data.address.municipality ??
+			data.address.county ??
+			"Неизвестный населённый пункт",
 		state: data.address.state,
 		countryCode: data.address.country_code.toUpperCase(),
 	}

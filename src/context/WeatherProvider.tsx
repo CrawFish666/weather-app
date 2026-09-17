@@ -38,15 +38,15 @@ export function WeatherProvider({ children }: { children: React.ReactNode }) {
 		setError(null);
 
 		try {
+			
 			setMode("weather");
-
 			if (city) {
 				setCity(city);
 			}
 
 			const data = await getWeatherData(coords);
 			setCurWeatherData(data);
-
+			
 		} catch (error) {
 			setError(error instanceof Error ? error.message : "Не удалось загрузить погоду");
 
@@ -108,7 +108,7 @@ export function WeatherProvider({ children }: { children: React.ReactNode }) {
 				const updatedRecentCities = addCityToRecent(data);
 
 				// Делаем запрос погоды по координатам + запрос для recent городов
-				Promise.allSettled([
+				await Promise.allSettled([
 					fetchWeather({ latitude: data.latitude, longitude: data.longitude }, data),
 					fetchRecentCitiesWeather(updatedRecentCities)
 				])
@@ -134,7 +134,7 @@ export function WeatherProvider({ children }: { children: React.ReactNode }) {
 	}, [addCityToRecent, fetchWeather, fetchRecentCitiesWeather]);
 
 	const searchCities = useCallback(
-		async (query: string, signal?: AbortSignal): Promise<City[]> => {
+		(query: string, signal?: AbortSignal): Promise<City[]> => {
 			return searchCitiesApi({
 				query,
 				signal
@@ -171,9 +171,7 @@ export function WeatherProvider({ children }: { children: React.ReactNode }) {
 	}, [recentCities, fetchWeather, fetchRecentCitiesWeather]);
 
 	useEffect(() => {
-		const timer = setTimeout(initializeApp, 1500);
-
-		return () => clearTimeout(timer);
+		initializeApp()
 
 	}, [initializeApp])
 
