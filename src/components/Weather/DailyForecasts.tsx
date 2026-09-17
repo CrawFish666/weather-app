@@ -1,8 +1,8 @@
 import useEmblaCarousel from 'embla-carousel-react'
 import { WheelGesturesPlugin } from "embla-carousel-wheel-gestures";
-import { HourlyForecastCardSkeleton } from "../Skeletons/weather/HourlyForecastCardSkeleton";
 import { useWeather } from "../../hooks/useWeather";
 import { DailyForecastCard } from "./DailyForecastCard";
+import { DailyForecastCardSkeleton } from '../Skeletons/weather/DailyForecastCardSkeleton';
 
 
 
@@ -30,7 +30,7 @@ export function DailyForecasts() {
 			<div className="embla__viewport overflow-hidden cursor-grab" ref={emblaRef}>
 				<div className="embla__container flex touch-pan-y touch-pinch-zoom gap-3">
 					{isLoadingCurWeather && Array.from({ length: 7 }).map((_, index) => (
-						<HourlyForecastCardSkeleton key={index} />
+						<DailyForecastCardSkeleton key={index}/>
 					))}
 					{!isLoadingCurWeather && curWeatherData?.dailyNormalize.map((day, index) => (
 						<DailyForecastCard
