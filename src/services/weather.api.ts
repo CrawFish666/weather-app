@@ -3,7 +3,7 @@ import type {
 	DailyWeatherList,
 	HourlyByDate,
 	HourlyWeather,
-	RawDailyWeather,
+	// RawDailyWeather,
 	RecentCityCurrentWeather,
 	WeatherData
 } from "../types/weather";
@@ -177,15 +177,15 @@ export async function getWeatherData({
 
 	const hourlyByDate = groupHourlyByDate(rawHourly);
 
-	const rawDaily: RawDailyWeather = {
-		date: data.daily.time,
-		weatherCode: data.daily.weather_code,
-		temperatureMin: data.daily.temperature_2m_min,
-		temperatureMax: data.daily.temperature_2m_max,
-		precipitationSum: data.daily.precipitation_sum,
-		tempUnitMax: data.daily_units.temperature_2m_max,
-		tempUnitMin: data.daily_units.temperature_2m_min
-	};
+	// const rawDaily: RawDailyWeather = {
+	// 	date: data.daily.time,
+	// 	weatherCode: data.daily.weather_code,
+	// 	temperatureMin: data.daily.temperature_2m_min,
+	// 	temperatureMax: data.daily.temperature_2m_max,
+	// 	precipitationSum: data.daily.precipitation_sum,
+	// 	tempUnitMax: data.daily_units.temperature_2m_max,
+	// 	tempUnitMin: data.daily_units.temperature_2m_min
+	// };
 
 	const dailyNormalize = normalizeDailyWeather(
 		data.daily,
