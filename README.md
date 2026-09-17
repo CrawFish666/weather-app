@@ -1,75 +1,167 @@
-# React + TypeScript + Vite
+# 🌤️ Weather App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Современное адаптивное приложение для просмотра текущей погоды и прогноза по городам.
 
-Currently, two official plugins are available:
+Приложение использует Open-Meteo для получения погодных данных и геокодирования, а также Geocode Maps.co для reverse geocoding по координатам.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Интерфейс разработан по принципу **mobile-first** и корректно отображается как на мобильных устройствах, так и на десктопе.
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## ✨ Возможности
 
-## Expanding the ESLint configuration
+### 🔎 Поиск и города
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- 🔎 Поиск городов
+- ⏱️ Debounce поиска
+- 🛑 Отмена предыдущего поискового запроса через `AbortController`
+- 📍 Определение местоположения пользователя
+- 🌍 Reverse geocoding по координатам
+- 🕘 Список недавно просмотренных городов
+- 💾 Сохранение недавно просмотренных городов в `localStorage`
+- 🔄 Автоматическое обновление порядка недавно просмотренных городов
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### 🌡️ Погода
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- 🌡️ Текущая температура
+- ☀️ Текущее состояние погоды
+- 📈 Почасовой прогноз
+- 🎨 Иконки погоды на основе WMO Weather Codes
+- 🔄 Горизонтальный carousel для почасового прогноза
+- 📌 Автоматическая прокрутка к текущему часу
+- 🌡️ Текущая погода для недавно просмотренных городов
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### 🎨 UI / UX
 
+- 📱 Mobile-first дизайн
+- 💻 Адаптация под десктоп
+- 💀 Skeleton loading
+- ✨ Splash Screen при инициализации приложения
+- 🔍 Раскрывающийся поиск
+- 📍 Раскрывающаяся кнопка геолокации
+- 🖼️ Адаптивные фоновые изображения
+- 🧩 Компонентный подход
+
+---
+
+## 🛠️ Стек
+
+### Frontend
+
+- React
+- TypeScript
+- Vite
+- Tailwind CSS
+- Context API
+- React Hooks
+- Embla Carousel
+- Embla Wheel Gestures
+- lucide-react
+
+### API
+
+- Open-Meteo Geocoding API
+- Open-Meteo Weather API
+- Geocode Maps Reverse Geocoding API
+
+---
+
+## 📡 API
+
+### Open-Meteo
+
+Используется для:
+
+- поиска городов;
+- получения текущей погоды;
+- получения почасового прогноза;
+- получения данных по нескольким городам одновременно.
+
+Open-Meteo не требует API key для используемых запросов.
+
+### Geocode Maps
+
+Используется для **reverse geocoding** — определения города по координатам пользователя, полученным через браузерную геолокацию.
+
+Для API используется ключ из `.env`.
+
+---
+
+## 🔐 Переменные окружения
+
+В проекте используется `.env`, который добавлен в `.gitignore` и не загружается в GitHub.
+
+Для настройки проекта необходимо создать `.env` на основе `.env.example`.
+
+Пример:
+
+```env
+VITE_GEOCODE_API_URL="https://geocoding-api.open-meteo.com/v1/search"
+VITE_REVERSE_GEOCODE_MAPS_API_URL="https://geocode.maps.co/reverse"
+VITE_REVERSE_GEOCODE_MAPS_API_KEY="YOUR_API_KEY"
+VITE_WEATHER_API_URL="https://api.open-meteo.com/v1/forecast"
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+> ⚠️ `VITE_REVERSE_GEOCODE_MAPS_API_KEY` используется во frontend-коде, поэтому такой ключ нельзя считать полностью секретным: переменные Vite с префиксом `VITE_` попадают в клиентский bundle и могут быть доступны пользователю. Рекомендуется использовать свою backend прослойку.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+---
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## 🚀 Запуск проекта
 
+Установить зависимости:
+
+```bash
+npm install
 ```
+
+Создать `.env` на основе `.env.example` и указать необходимые значения.
+
+Запустить dev-сервер:
+
+```bash
+npm run dev
+```
+
+Production-сборка:
+
+```bash
+npm run build
+```
+
+Предпросмотр production-сборки:
+
+```bash
+npm run preview
+```
+
+---
+
+## ✅ Что уже сделано
+
+- [x] Определение местоположения пользователя
+- [x] Поиск городов с debounce
+- [x] Выбор города и получение погоды
+- [x] Отмена предыдущего поискового запроса через `AbortController`
+- [x] Reverse geocoding
+- [x] Текущая погода
+- [x] Почасовой прогноз
+- [x] WMO weather codes и иконки
+- [x] Recently Searched
+- [x] Погода для недавно просмотренных городов
+- [x] Сохранение городов в `localStorage`
+- [x] Skeleton loading
+- [x] Splash Screen
+- [x] Адаптивный mobile-first интерфейс
+- [x] Embla Carousel
+- [x] Автоматическая прокрутка к текущему часу
+
+---
+
+## 🔜 Что планируется
+
+- [ ] `useDelayedLoading` — показывать skeleton только если запрос длится дольше ~150 мс, чтобы избежать визуального мерцания при быстром соединении
+- [ ] Разделение `WeatherContext` на отдельные контексты для основной погоды и Recently Searched
+- [ ] Прогноз по дням
+- [ ] Улучшение обработки ошибок API для UI
+- [ ] Дополнительные UI/UX улучшения
+
