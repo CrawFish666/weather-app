@@ -30,3 +30,13 @@ export function getCurrentHourKey(timezone: string): string {
 
 	return `${map.year}-${map.month}-${map.day}T${hour}:00`;
 }
+
+export function formatForecastDate(date: string): string {
+	const forecastDate = new Date(`${date}T00:00:00`);
+
+	return new Intl.DateTimeFormat("ru-RU", {
+		weekday: "short",
+		day: "numeric",
+		month: "short",
+	}).format(forecastDate);
+}

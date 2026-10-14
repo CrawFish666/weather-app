@@ -25,7 +25,7 @@ export function HourlyForecasts() {
 
 	const { curWeatherData, isLoadingCurWeather } = useWeather();
 
-	const todayDate = curWeatherData?.daily.date[0];
+	const todayDate = curWeatherData?.dailyNormalize[0].date;
 	const todayHourly = todayDate ? curWeatherData?.hourlyByDate[todayDate] : undefined;
 
 	const currentHourKey = curWeatherData?.timezone ? getCurrentHourKey(curWeatherData?.timezone) : null;
@@ -48,28 +48,24 @@ export function HourlyForecasts() {
 
 
 	return (
-		<section>
-			<h2 className="mb-4 text-lg font-semibold text-gray-400/80">Hourly Forecast</h2>
-			<div className="embla">
-				<div className="embla__viewport overflow-hidden cursor-grab" ref={emblaRef}>
-					<div className="embla__container flex touch-pan-y touch-pinch-zoom gap-3">
-						{isLoadingCurWeather && Array.from({ length: 24 }).map((_, index) => (
-							<HourlyForecastCardSkeleton key={index} />
-						))}
-						{!isLoadingCurWeather && todayHourly?.time.map((time, index) => (
-							<HourlyForecastCard
-								key={time}
-								time={time}
-								weatherCode={todayHourly.weatherCode[index]}
-								temperature={todayHourly.temperature[index]}
-								tempUnit={todayHourly.tempUnit}
-								isNow={time === currentHourKey} />
-						))}
-					</div>
+		<div className="embla">
+			<div className="embla__viewport overflow-hidden cursor-grab" ref={emblaRef}>
+				<div className="embla__container flex touch-pan-y touch-pinch-zoom gap-3">
+					{isLoadingCurWeather && Array.from({ length: 24 }).map((_, index) => (
+						<HourlyForecastCardSkeleton key={index} />
+					))}
+					{!isLoadingCurWeather && todayHourly?.time.map((time, index) => (
+						<HourlyForecastCard
+							key={time}
+							time={time}
+							weatherCode={todayHourly.weatherCode[index]}
+							temperature={todayHourly.temperature[index]}
+							tempUnit={todayHourly.tempUnit}
+							isNow={time === currentHourKey} />
+					))}
 				</div>
-
 			</div>
 
-		</section>
+		</div>
 	)
 }

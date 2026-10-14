@@ -9,7 +9,7 @@ export function CurrentTemperature() {
 	const { curWeatherData, isLoadingCurWeather } = useWeather();
 
 	const current = curWeatherData?.current;
-	const daily = curWeatherData?.daily;
+	const daily = curWeatherData?.dailyNormalize[0];
 
 	if (isLoadingCurWeather) {
 		return (
@@ -28,14 +28,14 @@ export function CurrentTemperature() {
 					<div className="bg-gray-500/20 py-1 px-5 rounded-full flex gap-5">
 						<span className="text-gray-400">H</span>
 						<div className="text-white">
-							<span>{daily?.temperatureMax[0].toFixed(0)}</span>
+							<span>{daily?.temperatureMax.toFixed(0)}</span>
 							<span className="text-xs text-gray-400/80 align-top relative top-0.5 left-0">{daily?.tempUnitMax}</span>
 						</div>
 					</div>
 					<div className="bg-gray-500/20 py-1 px-5 rounded-full flex gap-5">
 						<span className="text-gray-400">L</span>
 						<div className="text-white">
-							<span>{daily?.temperatureMin[0].toFixed(0)}</span>
+							<span>{daily?.temperatureMin.toFixed(0)}</span>
 							<span className="text-xs  align-top relative top-0.5 left-0">{daily?.tempUnitMin}</span>
 						</div>
 					</div>
