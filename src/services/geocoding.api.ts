@@ -2,8 +2,9 @@ import type {
 	City,
 	GeocodingApiResponse,
 	GeocodingApiResult,
-	GeocodingApiError
 } from "../types/geocoding"
+
+import { fetchJson } from "./apiRequest";
 
 const GEOCODE_API_URL = import.meta.env.VITE_GEOCODE_API_URL;
 const REVERSE_GEOCODE_MAPS_API_URL = import.meta.env.VITE_REVERSE_GEOCODE_MAPS_API_URL;
@@ -44,13 +45,7 @@ export async function getCityByCoordinates(latitude: number, longitude: number, 
 		"accept-language": "ru"
 	}).toString();
 
-	const response = await fetch(url);
-
-	if (!response.ok) {
-		throw new Error(`Reverse geocoding failed: ${response.status}`);
-	}
-
-	const data: ReverseGeocodingResponse = await response.json();
+	const data = await fetchJson<ReverseGeocodingResponse>(url);
 
 	return {
 		id: data.place_id,
@@ -113,18 +108,7 @@ export async function searchCities({
 	// Преобразуем объект параметров в строку и пихаем в объект для поиска
 	url.search = params.toString();
 
-	const response = await fetch(url, {
-		signal
-	});
-
-	if (!response.ok) {
-		const errorData: GeocodingApiError = await response.json();
-
-		throw new Error(errorData.reason);
-	}
-
-	// Ожидаем ответ по интерфейсу
-	const data: GeocodingApiResponse = await response.json();
+	const data = await fetchJson<GeocodingApiResponse>(url, { signal });
 
 	// Преобразуем ответ в нужные нам данные, либо в пустоту.
 	return data.results?.map(mapCity) ?? [];

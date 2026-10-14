@@ -5,7 +5,7 @@ import { useWeather } from "../hooks/useWeather";
 
 export function LocationAction() {
 
-	const { useMyLocation } = useWeather();
+	const { useMyLocation, error } = useWeather();
 
 	return (
 		<div className="text-white relative inline-flex items-center ">
@@ -15,6 +15,14 @@ export function LocationAction() {
 				</div>
 				<div className="p-2">Использовать геолокацию</div>
 			</button>
+			{error && (
+				<p
+					role="alert"
+					className="absolute left-0 top-full z-20 mt-2 w-64 whitespace-normal rounded-lg bg-red-950/90 p-3 text-sm text-white shadow-lg"
+				>
+					{error}
+				</p>
+			)}
 		</div>
 	);
 }

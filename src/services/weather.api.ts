@@ -7,6 +7,8 @@ import type {
 	WeatherData
 } from "../types/weather";
 
+import { fetchJson } from "./apiRequest";
+
 const WEATHER_API_URL = import.meta.env.VITE_WEATHER_API_URL;
 
 // То что должен получить наша функция/сервис на вход
@@ -131,13 +133,7 @@ export async function getWeatherData({
 		timezone: "auto"
 	}).toString();
 
-	const resp = await fetch(url);
-
-	if (!resp.ok) {
-		throw new Error(`Weather request failed: ${resp.status}`);
-	}
-
-	const data: WeatherApiResponse = await resp.json();
+	const data = await fetchJson<WeatherApiResponse>(url);
 
 	// Сборка полученных данных в наш интерфейс
 	const current: CurrentWeather = {
@@ -192,17 +188,12 @@ export async function getCurrentWeatherForRecentCities(cities: GetCurrentWeather
 		timezone: "auto"
 	}).toString()
 
-	const response = await fetch(url);
-
-	if (!response.ok) {
-		throw new Error(`Batch weather request failed: ${response.status}`);
-	}
-
-	// принимаем сырые данные
-	const rawData = await response.json();
-
+	const rawData = await fetchJson<
+		RecentCityWeatherApiResponse | RecentCityWeatherApiResponse[]
+	>(url);
 	// Нормализуем и делаем всегда массив!
-	const data: RecentCityWeatherApiResponse[] = Array.isArray(rawData) ? rawData : [rawData];
+	const data = Array.isArray(rawData) ? rawData : [rawData];
+
 
 	return data.map(item => ({
 		temperature: item.current.temperature_2m,

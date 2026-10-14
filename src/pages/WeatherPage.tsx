@@ -1,15 +1,29 @@
 import { ExpandableSearch } from "../components/ExpandableSearch";
 import { LocationAction } from "../components/LocationAction";
 
-
+import { useState } from "react";
 import { CityHeader } from "../components/Weather/CityHeader";
 import { CurrentTemperature } from "../components/Weather/CurrentTemperature";
-
-import { HourlyForecasts } from "../components/Weather/HourlyForecasts";
+import { Forecasts } from "../components/Weather/Forecasts";
+import { useWeather } from "../hooks/useWeather";
 import { RecentlySearched } from "../components/Weather/RecentlySearched";
-
+import { RotateCw } from "lucide-react";
+import { InlineNotice } from "../components/InlineNotice";
 
 export function WeatherPage() {
+
+	const { weatherError, retryWeather, curWeatherData, isLoadingCurWeather } = useWeather();
+	const showWeatherSections = curWeatherData !== null || isLoadingCurWeather;
+	const [isRetrying, setIsRetrying] = useState(false);
+
+	async function handleRetry() {
+		setIsRetrying(true);
+		try {
+			await retryWeather();
+		} finally {
+			setIsRetrying(false);
+		}
+	}
 
 	return (
 		<>
@@ -30,13 +44,43 @@ export function WeatherPage() {
 			<main className="">
 				<div className="max-w-7xl m-auto px-2 md:px-12 flex flex-col gap-10 py-6">
 
-					<CityHeader />
+					{(weatherError || isRetrying) && (
+						<InlineNotice
+							variant={isRetrying ? "loading" : "error"}
+							title={
+								isRetrying
+									? "Загружаем погоду"
+									: "Не удалось загрузить погоду"
+							}
+							message={
+								isRetrying
+									? "Ожидаем ответ сервиса."
+									: weatherError ?? ""
+							}
+							action={
+								<button
+									type="button"
+									onClick={() => void handleRetry()}
+									disabled={isRetrying}
+									className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-white/15 px-4 py-2 text-sm font-medium transition-colors hover:bg-white/25 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
+								>
+									{!isRetrying && <RotateCw className="h-4 w-4" />}
+									{isRetrying ? "Загружаем..." : "Повторить"}
+								</button>
+							}
+						/>
+					)}
 
-					<CurrentTemperature />
+					{showWeatherSections && (
+						<>
+							<CityHeader />
+							<CurrentTemperature />
+						</>
+					)}
 
 					<RecentlySearched />
 
-					<HourlyForecasts />
+					{showWeatherSections && <Forecasts />}
 
 				</div>
 			</main>

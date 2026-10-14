@@ -23,7 +23,7 @@ export function RecentlySearched() {
 		duration: 40
 	})
 
-	const { recentCities, recentCitiesWeather, isLoadingRecentWeather } = useWeather();
+	const { recentCities, recentCitiesWeather, isLoadingRecentWeather, recentWeatherError} = useWeather();
 
 	return (
 		<section className="">
@@ -31,6 +31,11 @@ export function RecentlySearched() {
 			<div>
 				<div>
 					<h2 className="mb-4 text-lg font-semibold text-gray-400/80">Recently Searched</h2>
+					{recentWeatherError && (
+						<p role="alert" className="mb-3 rounded-lg bg-red-950/50 p-3 text-sm text-white">
+							{recentWeatherError}
+						</p>
+					)}
 				</div>
 
 				<div className="embla">
