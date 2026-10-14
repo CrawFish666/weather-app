@@ -7,10 +7,17 @@ export type WeatherMode = "checking" | "welcome" | "weather";
 
 export interface WeatherContextValue {
 	mode: WeatherMode;
+	isWelcomeActionLoading: boolean;
+	welcomeLoadingMessage: string | null;
+
 	error: string | null;
+	weatherError: string | null;
+	retryWeather: () => Promise<void>;
 
 	useMyLocation: () => void;
 	isLoadingCurWeather: boolean;
+	recentWeatherError: string | null;
+
 	curWeatherData: WeatherData | null;
 	city: City | null;
 	searchCities: (query: string, signal?: AbortSignal) => Promise<City[]>;
@@ -18,6 +25,7 @@ export interface WeatherContextValue {
 	recentCities: City[];
 	recentCitiesWeather: Record<string, RecentCityCurrentWeather>;
 	isLoadingRecentWeather: boolean;
+
 }
 
 export const WeatherContext = createContext<WeatherContextValue | undefined>(undefined);

@@ -1,6 +1,6 @@
 import sunLogo from "../assets/sunLogo.webp";
 
-export function SplashScreen() {
+export function SplashScreen({message = "Загружаем приложение..."}: {message?: string}) {
 
 	return (
 		<>
@@ -14,10 +14,18 @@ export function SplashScreen() {
 			</header>
 
 			<main className="max-w-96 md:max-w-2xl w-full mx-auto px-2 flex items-center justify-center ">
-				<div className="flex flex-col items-center w-full animate-[splash_1.5s_ease-in-out_infinite]">
-					<div className="max-w-72 self-center">
-						<img src={sunLogo} className="object-contain" fetchPriority="high" alt="sun" />
+				<div className="flex flex-col items-center w-full">
+					<div className="max-w-72 self-center animate-[splash_1.5s_ease-in-out_infinite]">
+						<img
+							src={sunLogo}
+							className="object-contain"
+							fetchPriority="high"
+							alt="sun"
+						/>
 					</div>
+					<p role="status" className="mt-4 text-center text-white/80">
+						{message}
+					</p>
 				</div>
 			</main>
 		</>

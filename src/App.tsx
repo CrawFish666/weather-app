@@ -1,8 +1,8 @@
 import { lazy, Suspense } from 'react';
 import './App.css'
 import { useWeather } from './hooks/useWeather'
-
 import { SplashScreen } from './components/SplashScreen'
+
 
 const WeatherPage = lazy(() => import('./pages/WeatherPage').then((module) => ({
 	default: module.WeatherPage,
@@ -15,12 +15,10 @@ const WelcomePage = lazy(() => import('./pages/WelcomePage').then((module) => ({
 
 function App() {
 
-	const { mode } = useWeather();
+	const { mode, isWelcomeActionLoading, welcomeLoadingMessage } = useWeather();
 
-	if (mode === "checking") {
-		return (
-			<SplashScreen />
-		)
+	if (mode === "checking" || isWelcomeActionLoading) {
+		return <SplashScreen message={welcomeLoadingMessage ?? undefined} />;
 	}
 
 	if (mode === "welcome") {
@@ -33,7 +31,7 @@ function App() {
 
 	return (
 		<>
-			<Suspense fallback={<SplashScreen />}>
+			<Suspense fallback={<SplashScreen message="Открываем прогноз..." />}>
 				<WeatherPage />
 			</Suspense>
 		</>

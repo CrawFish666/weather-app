@@ -2,7 +2,7 @@ import { Search, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import type { City } from "../types/geocoding";
 import { useWeather } from "../hooks/useWeather";
-
+import { getApiErrorMessage } from "../services/apiRequest";
 
 
 export function ExpandableSearch() {
@@ -12,6 +12,7 @@ export function ExpandableSearch() {
 	const [query, setQuery] = useState("");
 	const [cities, setCities] = useState<City[] | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
+	const [searchError, setSearchError] = useState<string | null>(null);
 
 	const inputRef = useRef<HTMLInputElement>(null);
 
@@ -47,6 +48,7 @@ export function ExpandableSearch() {
 	useEffect(() => {
 
 		const trimmedQuery = query.trim();
+		setSearchError(null);
 
 		if (trimmedQuery.length <= 2) {
 			setCities(null);
@@ -69,6 +71,8 @@ export function ExpandableSearch() {
 				}
 
 				console.error(error);
+				setCities(null);
+				setSearchError(getApiErrorMessage(error, "API поиска городов"));
 			} finally {
 				setIsLoading(false)
 			}
@@ -82,7 +86,7 @@ export function ExpandableSearch() {
 	}, [query, searchCities])
 
 	return (
-		<div className={`bg-gray-600 cursor-pointer inline-flex flex-row-reverse  ${isLoading || cities ? "rounded-t-2xl" : "rounded-full"} transition-[width] duration-300 ease-out items-center overflow-hidden whitespace-nowrap ${isOpen ? "w-[min(96vw,400px)]" : "w-10"}`}>
+		<div className={`bg-gray-600 cursor-pointer inline-flex flex-row-reverse  ${isLoading || cities || searchError ? "rounded-t-2xl" : "rounded-full"} transition-[width] duration-300 ease-out items-center overflow-hidden whitespace-nowrap ${isOpen ? "w-[min(96vw,400px)]" : "w-10"}`}>
 			<button
 				onClick={isOpen ? handleClose : handleOpen}
 				className="p-2 flex items-center z-10">
@@ -101,12 +105,18 @@ export function ExpandableSearch() {
 							</span>
 						</li>
 					)}
-
-					{!isLoading && cities !== null && cities.length === 0 && (
-						<li className="bg-gray-600 p-3 text-white cursor-default">Не удалось найти город...</li>
+					{!isLoading && searchError && (
+						<li role="alert" className="bg-gray-600 p-3 text-white cursor-default whitespace-normal">
+							{searchError}
+						</li>
+					)}
+					{!isLoading && !searchError && cities !== null && cities.length === 0 && (
+						<li className="bg-gray-600 p-3 text-white cursor-default">
+							Не удалось найти город...
+						</li>
 					)}
 
-					{!isLoading && cities && (
+					{!isLoading && !searchError && cities && (
 						cities.map(city => (
 							<li key={city.id} className="overflow-hidden">
 								<button onClick={() => handleSelect(city)} type="button" className="w-full bg-gray-600 p-3 text-left text-white hover:bg-gray-700 cursor-pointer">
